@@ -1,33 +1,26 @@
-import React, { useContext, useEffect } from "react";
-import { useQuery, gql } from "@apollo/client";
-import { ContentKeyContext } from "@/contexts/ContentKeyContext";
-import Content from "@/components/atoms/Content";
 import ButtonGeneric from "@/components/atoms/ButtonGeneric";
+import Content from "@/components/atoms/Content";
+import { ContentKeyContext } from "@/contexts/ContentKeyContext";
+import { GET_CONTENT_KEYS } from "@/graphql/queries/queries";
+import { useQuery } from "@apollo/client";
+import React, { useContext, useEffect } from "react";
 
 interface IProps {}
 
-const GET_CONTENT_KEYS: any = gql(/* GraphQL */ `
-  query ContentKeys($page: String!, $lang: String!) {
-    contentKeys(page: $page, lang: $lang) {
-      key
-      content
-    }
-  }
-`);
-
 const auth: React.FC<IProps> = () => {
+  const { language, setLanguage, setContentKeys } =
+    useContext(ContentKeyContext);
+
   const { loading, error, data } = useQuery(GET_CONTENT_KEYS, {
     variables: { page: "auth_page", lang: "pt_BR" },
   });
-
-  const { setContentKeys } = useContext(ContentKeyContext);
 
   useEffect(() => {
     if (data) setContentKeys?.(data.contentKeys);
   }, [data]);
 
   if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error : {error.message}</p>;
+  if (error) return <p>Error loading the page</p>;
 
   return (
     <div className='container flex flex-wrap items-center justify-center mx-auto mt-36'>
