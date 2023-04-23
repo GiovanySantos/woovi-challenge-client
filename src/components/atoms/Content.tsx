@@ -12,8 +12,6 @@ const Content: React.FC<IProps> = (props) => {
 
   const getContent = (contentKey: string) => {
     if (contentKeys && contentKeys.length > 0) {
-      console.log();
-
       return String(
         contentKeys.find((ck) => ck.key === String(contentKey))?.content
       );
@@ -21,7 +19,11 @@ const Content: React.FC<IProps> = (props) => {
     return "";
   };
 
-  return <p className={`${className}`}>{getContent(contentKey)}</p>;
+  return (
+    <p className={`${className}`} data-testid={`content-${contentKey}`}>
+      {getContent(contentKey)}
+    </p>
+  );
 };
 
 export default Content;

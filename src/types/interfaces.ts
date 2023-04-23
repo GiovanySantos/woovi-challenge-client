@@ -3,3 +3,8 @@ export interface IContentKeys {
   content: string;
 }
 
+export interface IUser {
+  email: string;
+  name: string;
+}
+
