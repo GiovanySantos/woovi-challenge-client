@@ -34,7 +34,7 @@ const Login: React.FC<IProps> = (props) => {
             className='text-2xl font-bold'
           />
         </div>
-        <div className='cursor-pointer text-soft_blue w-fit'>
+        <div className='cursor-pointer text-soft_blue w-fit hover:text-blue'>
           <Content contentKey='recover_password' />
         </div>
       </div>
@@ -48,7 +48,7 @@ const Login: React.FC<IProps> = (props) => {
           <Content contentKey='login_redirect_signup_message' />
           <button onClick={() => setPageSwitcher(EnumAuthPages.signin)}>
             <Content
-              className='cursor-pointer text-soft_blue w-fit'
+              className='cursor-pointer text-soft_blue w-fit hover:text-blue'
               contentKey='signup_redirect_button'
             />
           </button>

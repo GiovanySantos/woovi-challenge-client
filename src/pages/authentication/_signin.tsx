@@ -32,7 +32,7 @@ const Signin: React.FC<IProps> = (props) => {
           <Content contentKey='already_have_an_account' />
           <button
             onClick={() => setPageSwitcher(EnumAuthPages.login)}
-            className='cursor-pointer text-soft_blue w-fit'>
+            className='cursor-pointer text-soft_blue w-fit hover:text-blue'>
             <Content contentKey='login' />
           </button>
         </div>

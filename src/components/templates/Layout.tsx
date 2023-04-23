@@ -10,7 +10,7 @@ interface IProps {
 const Layout: React.FC<IProps> = ({ children }) => {
   return (
     <div
-      className={`${montserrat.className} items-center justify-center w-screen h-screen bg-background_primary selection:bg-transparent`}>
+      className={`${montserrat.className} items-center justify-center w-screen h-screen bg-background_primary selection:bg-transparent cursor-default`}>
       <div className='flex items-center justify-center py-5'>
         <div className='text-4xl font-extrabold cursor-pointer text-green '>
           Woovi
