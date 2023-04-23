@@ -54,12 +54,12 @@ const authentication: React.FC = () => {
   };
 
   return (
-    <div className='container flex flex-wrap items-center justify-center mx-auto mt-36'>
-      <div className='flex flex-wrap flex-col items-center justify-center p-10 m-10 text-center bg-white rounded-lg shadow-lg border-[1px] border-slate-300'>
+    <div className='container flex flex-wrap items-center justify-center mx-auto'>
+      <div className='flex flex-wrap flex-col items-center justify-center p-10 m-10 text-center bg-white rounded-md shadow-lg border-[1px] border-slate-300'>
         {loading ? (
-          <p>Loading...</p>
+          <div>Loading...</div>
         ) : error ? (
-          <p>Error loading the page</p>
+          <div>Error loading the page</div>
         ) : (
           getCurrentPage()
         )}

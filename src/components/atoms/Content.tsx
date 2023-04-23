@@ -20,9 +20,9 @@ const Content: React.FC<IProps> = (props) => {
   };
 
   return (
-    <p className={`${className}`} data-testid={`content-${contentKey}`}>
+    <div className={`${className}`} data-testid={`content-${contentKey}`}>
       {getContent(contentKey)}
-    </p>
+    </div>
   );
 };
 

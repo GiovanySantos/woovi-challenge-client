@@ -12,9 +12,9 @@ const Layout: React.FC<IProps> = ({ children }) => {
     <div
       className={`${montserrat.className} items-center justify-center w-screen h-screen bg-background_primary selection:bg-transparent`}>
       <div className='flex items-center justify-center py-5'>
-        <p className='text-4xl font-extrabold cursor-pointer text-green '>
+        <div className='text-4xl font-extrabold cursor-pointer text-green '>
           Woovi
-        </p>
+        </div>
       </div>
       <div className='flex items-center justify-center w-screen'>
         {children}

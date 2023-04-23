@@ -1,11 +1,11 @@
 import React from "react";
 import ButtonGeneric from "./ButtonGeneric";
 
-describe("Should test button functionalities", () => {
-  it("Should test click function", () => {
+describe("Should test ButtonGeneric", () => {
+  it("Should test basic properties", () => {
     cy.mount(
       <ButtonGeneric onClick={() => alert("tested")} dataTestId='test-button'>
-        <p>Test</p>
+        <div>Test</div>
       </ButtonGeneric>
     );
 

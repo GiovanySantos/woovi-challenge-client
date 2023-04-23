@@ -9,15 +9,19 @@ interface IContentKeyContext {
   setLanguage?: React.Dispatch<React.SetStateAction<EnumLanguageAvaliable>>;
 }
 
-const INITIAL_VALUE = [
+const INITIAL_TEST_VALUE = [
   {
-    key: "test_content",
+    key: "test_Content",
     content: "this is a test",
+  },
+  {
+    key: "test_InputGeneric",
+    content: "Test for InputGeneric",
   },
 ];
 
 export const ContentKeyContext = createContext<IContentKeyContext>({
-  contentKeys: INITIAL_VALUE,
+  contentKeys: INITIAL_TEST_VALUE,
   setContentKeys: () => {},
   language: EnumLanguageAvaliable.ptBR,
   setLanguage: () => {},
