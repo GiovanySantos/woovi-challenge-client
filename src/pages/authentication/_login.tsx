@@ -3,16 +3,20 @@ import { EnumAuthPages } from ".";
 import Content from "@/components/atoms/Content";
 import InputGeneric from "@/components/molecules/InputGeneric";
 import ButtonGeneric from "@/components/atoms/ButtonGeneric";
+import Toaster from "@/components/molecules/Toaster";
 
 interface IProps {
+  isLoading?: boolean;
+  errors?: string[];
   setPageSwitcher: React.Dispatch<React.SetStateAction<EnumAuthPages>>;
+  setErrors: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
 const Login: React.FC<IProps> = (props) => {
-  const { setPageSwitcher } = props;
+  const { isLoading, errors, setErrors, setPageSwitcher } = props;
 
   return (
-    <div className='flex flex-col justify-start gap-10 text-start'>
+    <div className='flex flex-col justify-start gap-5 text-start'>
       <div className='text-3xl font-semibold'>
         <Content contentKey='welcome_title' />
       </div>
@@ -38,9 +42,13 @@ const Login: React.FC<IProps> = (props) => {
           <Content contentKey='recover_password' />
         </div>
       </div>
-      <div className='flex flex-col gap-5'>
+      <div className='flex flex-col gap-2'>
+        {errors?.length || 0 > 0 ? (
+          <Toaster setErrors={setErrors} errorsContentKey={errors || []} />
+        ) : null}
         <div>
           <ButtonGeneric
+            isLoading={isLoading}
             type='submit'
             dataTestId='continue-button'
             className='w-full'>

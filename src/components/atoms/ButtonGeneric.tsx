@@ -1,4 +1,5 @@
 import React from "react";
+import Spinner from "./Spinner";
 
 interface IProps {
   children: JSX.Element;
@@ -6,20 +7,29 @@ interface IProps {
   className?: string;
   dataTestId: string;
   disabled?: boolean;
+  isLoading?: boolean;
   type?: "button" | "submit" | "reset" | undefined;
 }
 
 const ButtonGeneric: React.FC<IProps> = (props) => {
-  const { children, onClick, className, dataTestId, type, disabled } = props;
+  const {
+    children,
+    onClick,
+    className,
+    dataTestId,
+    type,
+    disabled,
+    isLoading,
+  } = props;
 
   return (
     <button
-      disabled={disabled}
+      disabled={disabled || isLoading}
       type={type}
       data-testid={dataTestId}
-      className={`disabled:bg-slate-400 px-4 py-2 text-white rounded-md bg-green hover:bg-dark_green ${className}`}
+      className={`disabled:bg-dark_green px-4 py-2 text-white rounded-md bg-green hover:bg-dark_green ${className}`}
       onClick={onClick}>
-      {children}
+      {isLoading ? <Spinner /> : children}
     </button>
   );
 };

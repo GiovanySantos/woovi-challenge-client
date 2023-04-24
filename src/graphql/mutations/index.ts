@@ -9,3 +9,12 @@ export const CREATE_USER_MUTATION = gql(/* GraphQL */ `
   }
 `);
 
+export const AUTH_MUTATION = gql(/* GraphQL */ `
+  mutation GetAuthUser($email: String!, $password: String!) {
+    getAuthUser(email: $email, password: $password) {
+      name
+      email
+    }
+  }
+`);
+

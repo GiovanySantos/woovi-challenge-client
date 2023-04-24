@@ -1,0 +1,12 @@
+------- To Do
+Setup login functionality
+
+Setup Signin test - e2e, unit
+
+Setup Login test - e2e, unit
+
+Setup CI/CD pipeline
+-functional test
+-unit test
+-e2e test
+-publish

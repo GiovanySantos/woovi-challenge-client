@@ -13,7 +13,7 @@ const Toaster: React.FC<IProps> = (props) => {
       id='toast-default'
       className='flex flex-wrap items-center w-full max-w-xs p-4 text-white bg-red-600 rounded-md shadow'
       role='alert'>
-      <div className='ml-3 text-sm font-normal'>
+      <div className='ml-3 text-xs font-normal'>
         {errorsContentKey?.map((error: string, key: number) => (
           <div key={key}>
             <Content contentKey={error} />

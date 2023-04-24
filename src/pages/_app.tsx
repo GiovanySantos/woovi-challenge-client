@@ -10,7 +10,7 @@ import Layout from "@/components/templates/Layout";
 import { useRouter } from "next/router";
 
 const client = new ApolloClient({
-  uri: "http://localhost:4000",
+  uri: process.env.local,
   cache: new InMemoryCache(),
 });
 

@@ -3,18 +3,50 @@ import { EnumAuthPages } from ".";
 import Content from "@/components/atoms/Content";
 import ButtonGeneric from "@/components/atoms/ButtonGeneric";
 import InputGeneric from "@/components/molecules/InputGeneric";
-import { validateCharacters, validateNumbers } from "@/utils/validatioons";
+import {
+  validateCharacters,
+  validateEmail,
+  validateNumbers,
+} from "@/utils/validations";
 import Toaster from "@/components/molecules/Toaster";
 
 interface IProps {
+  isLoading?: boolean;
   errors?: string[];
   setPageSwitcher: React.Dispatch<React.SetStateAction<EnumAuthPages>>;
   setErrors: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
 const Signin: React.FC<IProps> = (props) => {
-  const { setPageSwitcher, errors, setErrors } = props;
+  const { setPageSwitcher, errors, setErrors, isLoading } = props;
+  const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+
+  const getValidationSVGIcon = (statement: boolean) => {
+    return statement ? (
+      <svg
+        className='w-4 h-4 mr-1.5 text-dark_green flex-shrink-0'
+        fill='currentColor'
+        viewBox='0 0 20 20'
+        xmlns='http://www.w3.org/2000/svg'>
+        <path
+          fillRule='evenodd'
+          d='M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z'
+          clip-rule='evenodd'></path>
+      </svg>
+    ) : (
+      <svg
+        className='w-4 h-4 mr-1.5 text-gray-600 flex-shrink-0'
+        fill='currentColor'
+        viewBox='0 0 20 20'
+        xmlns='http://www.w3.org/2000/svg'>
+        <path
+          fillRule='evenodd'
+          d='M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z'
+          clip-rule='evenodd'></path>
+      </svg>
+    );
+  };
 
   return (
     <div className='flex flex-col justify-start gap-6 text-start'>
@@ -33,6 +65,8 @@ const Signin: React.FC<IProps> = (props) => {
           dataTestId='signin_email_label'
           label='signin_email_label'
           type='text'
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
         />
         <InputGeneric
           name='password'
@@ -53,35 +87,36 @@ const Signin: React.FC<IProps> = (props) => {
         </div>
       </div>
       <div className='flex flex-col gap-5'>
-        <ButtonGeneric
-          type='submit'
-          dataTestId='continue-button'
-          className='w-full'>
-          <Content contentKey='continue_button' />
-        </ButtonGeneric>
+        <div>
+          <ButtonGeneric
+            isLoading={isLoading}
+            type='submit'
+            dataTestId='continue-button'
+            className='w-full'>
+            <Content contentKey='continue_button' />
+          </ButtonGeneric>
+        </div>
         {errors?.length || 0 > 0 ? (
           <Toaster setErrors={setErrors} errorsContentKey={errors || []} />
         ) : (
           ""
         )}
-        <div className='flex flex-col gap-3 border-[1px] border-grey rounded-md px-3 py-4'>
-          <Content contentKey='password_validation_title' />
-          <div className='flex flex-col gap-1'>
-            <Content
-              className={
-                validateNumbers(password) ? "text-dark_green" : "text-red-600"
-              }
-              contentKey='password_validation_1'
-            />
-            <Content
-              className={
-                validateCharacters(password)
-                  ? "text-dark_green"
-                  : "text-red-600"
-              }
-              contentKey='password_validation_2'
-            />
-          </div>
+        <div className='flex flex-col gap-3 border-[1px] border-gray rounded-md px-3 py-4 font-semibold text-zinc-600'>
+          <Content contentKey='validations_title' />
+          <ul className='text-xs'>
+            <li className='flex items-center'>
+              {getValidationSVGIcon(validateEmail(email))}
+              <Content contentKey='email_validation_1' />
+            </li>
+            <li className='flex items-center'>
+              {getValidationSVGIcon(validateNumbers(password))}
+              <Content contentKey='password_validation_1' />
+            </li>
+            <li className='flex items-center'>
+              {getValidationSVGIcon(validateCharacters(password))}
+              <Content contentKey='password_validation_2' />
+            </li>
+          </ul>
         </div>
       </div>
     </div>

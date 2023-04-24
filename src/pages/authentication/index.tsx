@@ -1,19 +1,18 @@
-import React, {
-  FormEvent,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import Auth from "./_auth";
 import Login from "./_login";
 import Signin from "./_signin";
 import { ContentKeyContext } from "@/contexts/ContentKeyContext";
 import { GET_CONTENT_KEYS_QUERY } from "@/graphql/queries";
-import { CREATE_USER_MUTATION } from "@/graphql/mutations";
+import { CREATE_USER_MUTATION, AUTH_MUTATION } from "@/graphql/mutations";
 import { useMutation, useQuery } from "@apollo/client";
-import { validateCharacters, validateNumbers } from "@/utils/validatioons";
-import Toaster from "@/components/molecules/Toaster";
+import {
+  validateCharacters,
+  validateEmail,
+  validateNumbers,
+} from "@/utils/validations";
+import { UserContext } from "../../contexts/UserContext";
+import { useRouter } from "next/router";
 
 export enum EnumAuthPages {
   auth = 0,
@@ -27,64 +26,109 @@ interface IFormSigninUser {
   password: string;
 }
 
-const authentication: React.FC = () => {
+const Authentication: React.FC = () => {
   const [pageSwitcher, setPageSwitcher] = useState<EnumAuthPages>(
     EnumAuthPages.auth
   );
   const [errors, setErrors] = useState<string[]>([]);
 
+  const router = useRouter();
   const loginFormRef = useRef<HTMLFormElement>(null);
   const signinFormRef = useRef<HTMLFormElement>(null);
 
   const { setContentKeys } = useContext(ContentKeyContext);
+  const { setUserData } = useContext(UserContext);
 
   const getCurrentPageContentKeys = () => {
-    if (pageSwitcher === EnumAuthPages.auth) return "auth_page";
-    if (pageSwitcher === EnumAuthPages.login) return "login_page";
-    if (pageSwitcher === EnumAuthPages.signin) return "signin_page";
-    return "";
+    switch (pageSwitcher) {
+      case EnumAuthPages.auth:
+        return "auth_page";
+      case EnumAuthPages.login:
+        return "login_page";
+      case EnumAuthPages.signin:
+        return "signin_page";
+      default:
+        return "";
+    }
   };
 
-  const { loading, error, data } = useQuery(GET_CONTENT_KEYS_QUERY, {
+  const {
+    loading: contentKeysLoading,
+    error: contentKeysError,
+    data: contentKeysData,
+  } = useQuery(GET_CONTENT_KEYS_QUERY, {
     variables: { page: getCurrentPageContentKeys(), lang: "pt_BR" },
     fetchPolicy: "cache-first",
   });
-  const [createUserMutation] = useMutation(CREATE_USER_MUTATION);
 
-  const validateForm = (name?: string, email?: string, password?: string) => {
-    if (!name || !email || !password) return false;
-    if (!validateCharacters(password) || !validateNumbers(password))
-      return false;
-    return true;
-  };
+  const [authenticateMutation, { loading: loginLoading }] =
+    useMutation(AUTH_MUTATION);
+
+  const [createUserMutation, { loading: signinLoading }] =
+    useMutation(CREATE_USER_MUTATION);
 
   const createUser = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const ref = signinFormRef.current || loginFormRef.current;
-
+    const ref = signinFormRef.current;
     if (ref) {
       const formData = Object.fromEntries(
         new FormData(ref).entries()
       ) as Partial<IFormSigninUser>;
 
-      const isValid = validateForm(
-        formData.name,
-        formData.email,
-        formData.password
-      );
+      const isValid =
+        !formData.name ||
+        !formData.email ||
+        !formData.password ||
+        !validateCharacters(formData.password) ||
+        !validateNumbers(formData.password) ||
+        validateEmail(formData.email);
 
       if (isValid) {
         try {
-          const { data, errors } = await createUserMutation({
+          const { data } = await createUserMutation({
             variables: {
               name: formData.name,
               email: formData.email,
               password: formData.password,
             },
           });
-          if (errors) console.log(errors);
-          if (data) console.log(data);
+          if (data) setPageSwitcher(EnumAuthPages.login);
         } catch (error: any) {
+          const newErrorList = [...errors, error.message];
+          const filtered = newErrorList.filter((elem, index) => {
+            return newErrorList.indexOf(elem) === index;
+          });
+          setErrors(filtered);
+        }
+      }
+    }
+  };
+
+  const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const ref = loginFormRef.current;
+    if (ref) {
+      const formData = Object.fromEntries(
+        new FormData(ref).entries()
+      ) as Partial<IFormSigninUser>;
+
+      const isValid = validateEmail(formData.email ?? "") || formData.password;
+
+      if (isValid) {
+        try {
+          const { data } = await authenticateMutation({
+            variables: {
+              email: formData.email,
+              password: formData.password,
+            },
+          });
+          console.log(data);
+          if (data) {
+            setUserData?.(data);
+            router.push("/");
+          }
+        } catch (error: any) {
+          console.log(error);
           const newErrorList = [...errors, error.message];
           const filtered = newErrorList.filter((elem, index) => {
             return newErrorList.indexOf(elem) === index;
@@ -102,8 +146,13 @@ const authentication: React.FC = () => {
 
       case EnumAuthPages.login:
         return (
-          <form onSubmit={createUser} ref={loginFormRef}>
-            <Login setPageSwitcher={setPageSwitcher} />
+          <form onSubmit={handleLogin} ref={loginFormRef}>
+            <Login
+              isLoading={loginLoading}
+              errors={errors}
+              setErrors={setErrors}
+              setPageSwitcher={setPageSwitcher}
+            />
           </form>
         );
 
@@ -111,6 +160,7 @@ const authentication: React.FC = () => {
         return (
           <form onSubmit={createUser} ref={signinFormRef}>
             <Signin
+              isLoading={signinLoading}
               errors={errors}
               setErrors={setErrors}
               setPageSwitcher={setPageSwitcher}
@@ -124,17 +174,17 @@ const authentication: React.FC = () => {
   };
 
   useEffect(() => {
-    if (data) {
-      setContentKeys?.(data.contentKeys);
+    if (contentKeysData) {
+      setContentKeys?.(contentKeysData.contentKeys);
     }
-  }, [data]);
+  }, [contentKeysData]);
 
   return (
     <div className='container flex flex-wrap items-center justify-center mx-auto'>
       <div className='flex flex-wrap flex-col items-center justify-center p-10 m-10 text-center bg-white rounded-md shadow-lg border-[1px] border-slate-300 gap-10'>
-        {loading ? (
+        {contentKeysLoading ? (
           <div>Loading...</div>
-        ) : error ? (
+        ) : contentKeysError ? (
           <div>Error loading the page</div>
         ) : (
           getCurrentPage()
@@ -144,5 +194,5 @@ const authentication: React.FC = () => {
   );
 };
 
-export default authentication;
+export default Authentication;
 
