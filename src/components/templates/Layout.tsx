@@ -1,5 +1,6 @@
 import React from "react";
 import { Montserrat } from "next/font/google";
+import { WooviSVG } from "@/assets/WooviSVG";
 
 const montserrat = Montserrat({ subsets: ["latin"] });
 
@@ -12,8 +13,8 @@ const Layout: React.FC<IProps> = ({ children }) => {
     <div
       className={`${montserrat.className} items-center justify-center w-screen h-screen bg-background_primary selection:bg-transparent cursor-default`}>
       <div className='flex items-center justify-center py-5'>
-        <div className='text-4xl font-extrabold cursor-pointer text-green '>
-          Woovi
+        <div className='text-4xl font-extrabold cursor-pointer text-green'>
+          <WooviSVG />
         </div>
       </div>
       <div className='flex items-center justify-center w-screen'>

@@ -1,6 +1,4 @@
-import React from "react";
-
-const Spinner = () => {
+export const SpinnerSVG = () => {
   return (
     <svg
       aria-hidden='true'
@@ -20,6 +18,4 @@ const Spinner = () => {
     </svg>
   );
 };
-
-export default Spinner;
 

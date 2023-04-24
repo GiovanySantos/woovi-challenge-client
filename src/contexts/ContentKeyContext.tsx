@@ -18,6 +18,10 @@ const INITIAL_TEST_VALUE = [
     key: "test_InputGeneric",
     content: "Test for InputGeneric",
   },
+  {
+    key: "test_toaster",
+    content: "Test for toaster",
+  },
 ];
 
 export const ContentKeyContext = createContext<IContentKeyContext>({

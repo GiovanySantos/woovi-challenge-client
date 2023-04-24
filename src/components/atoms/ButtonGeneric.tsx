@@ -1,5 +1,5 @@
 import React from "react";
-import Spinner from "./Spinner";
+import { SpinnerSVG } from "@/assets/SpinnerSVG";
 
 interface IProps {
   children: JSX.Element;
@@ -29,7 +29,7 @@ const ButtonGeneric: React.FC<IProps> = (props) => {
       data-testid={dataTestId}
       className={`disabled:bg-dark_green px-4 py-2 text-white rounded-md bg-green hover:bg-dark_green ${className}`}
       onClick={onClick}>
-      {isLoading ? <Spinner /> : children}
+      {isLoading ? <SpinnerSVG /> : children}
     </button>
   );
 };

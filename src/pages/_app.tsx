@@ -1,13 +1,12 @@
-import "@/styles/globals.css";
-import { useEffect, useState } from "react";
-import type { AppProps } from "next/app";
-import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
+import Layout from "@/components/templates/Layout";
 import { ContentKeyContext } from "@/contexts/ContentKeyContext";
 import { UserContext } from "@/contexts/UserContext";
-import { IContentKeys, IUser } from "@/types/interfaces";
+import "@/styles/globals.css";
 import { EnumLanguageAvaliable } from "@/types/enums";
-import Layout from "@/components/templates/Layout";
-import { useRouter } from "next/router";
+import { IContentKeys, IUser } from "@/types/interfaces";
+import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
+import type { AppProps } from "next/app";
+import { useState } from "react";
 
 const client = new ApolloClient({
   uri: process.env.local,
@@ -20,11 +19,6 @@ export default function App({ Component, pageProps }: AppProps) {
   );
   const [contentKeys, setContentKeys] = useState<IContentKeys[]>([]);
   const [userData, setUserData] = useState<IUser | undefined>(undefined);
-  const router = useRouter();
-
-  useEffect(() => {
-    if (!userData) router.push("/authentication");
-  }, [userData]);
 
   return (
     <ApolloProvider client={client}>
