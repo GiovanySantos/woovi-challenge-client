@@ -5,6 +5,7 @@ describe("Should test InputGeneric component", () => {
   it("Should test basic properties", () => {
     cy.mount(
       <InputGeneric
+        name='test_InputGeneric'
         label='test_InputGeneric'
         type='text'
         dataTestId='test-input'

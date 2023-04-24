@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import { EnumAuthPages } from ".";
 import Content from "@/components/atoms/Content";
 import InputGeneric from "@/components/molecules/InputGeneric";
 import ButtonGeneric from "@/components/atoms/ButtonGeneric";
-import { IUser } from "@/types/interfaces";
 
 interface IProps {
   setPageSwitcher: React.Dispatch<React.SetStateAction<EnumAuthPages>>;
@@ -11,7 +10,6 @@ interface IProps {
 
 const Login: React.FC<IProps> = (props) => {
   const { setPageSwitcher } = props;
-  const [userInfo, setUserInfo] = useState<IUser | undefined>(undefined);
 
   return (
     <div className='flex flex-col justify-start gap-10 text-start'>
@@ -21,6 +19,7 @@ const Login: React.FC<IProps> = (props) => {
       <div className='flex flex-col gap-5'>
         <div>
           <InputGeneric
+            name='email'
             dataTestId='login_email_label'
             label='login_email_label'
             type='text'
@@ -28,6 +27,7 @@ const Login: React.FC<IProps> = (props) => {
         </div>
         <div>
           <InputGeneric
+            name='password'
             dataTestId='login_password_label'
             label='login_password_label'
             type='password'
@@ -40,7 +40,10 @@ const Login: React.FC<IProps> = (props) => {
       </div>
       <div className='flex flex-col gap-5'>
         <div>
-          <ButtonGeneric dataTestId='continue-button' className='w-full'>
+          <ButtonGeneric
+            type='submit'
+            dataTestId='continue-button'
+            className='w-full'>
             <Content contentKey='continue_button' />
           </ButtonGeneric>
         </div>
