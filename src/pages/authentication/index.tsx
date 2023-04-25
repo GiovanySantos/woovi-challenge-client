@@ -14,6 +14,7 @@ import { UserContext } from "../../contexts/UserContext";
 import Auth from "./_auth";
 import Login from "./_login";
 import Signin from "./_signin";
+import { AlertContext } from "@/contexts/AlertContext";
 
 interface IFormSigninUser {
   name: string;
@@ -33,13 +34,15 @@ const Authentication: React.FC = () => {
   );
   const [errors, setErrors] = useState<string[]>([]);
   const [formStepNavigator, setFormStepNavigator] =
-    useState<EnumFormStepsNavigator>(EnumFormStepsNavigator.password);
+    useState<EnumFormStepsNavigator>(EnumFormStepsNavigator.name);
 
   const loginFormRef = useRef<HTMLFormElement>(null);
   const signinFormRef = useRef<HTMLFormElement>(null);
 
   const { setContentKeys } = useContext(ContentKeyContext);
   const { setUserData } = useContext(UserContext);
+  const { setAlertContentKey, setShowToaster, setType } =
+    useContext(AlertContext);
 
   const router = useRouter();
 
@@ -58,38 +61,68 @@ const Authentication: React.FC = () => {
   const [createUserMutation, { loading: signinLoading }] =
     useMutation(CREATE_USER_MUTATION);
 
-  const createUser = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleNavigate = {
+    Reset: () => {
+      setFormStepNavigator(EnumFormStepsNavigator.name);
+    },
+    Add: () => {
+      setFormStepNavigator((oldValue) => oldValue + 1);
+    },
+    AddTwo: () => {
+      setFormStepNavigator((oldValue) => oldValue + 2);
+    },
+  };
+
+  const sendUser = async (name: string, email: string, password: string) => {
+    try {
+      const { errors } = await createUserMutation({
+        variables: { name, email, password },
+      });
+      if (!errors) {
+        setErrors([]);
+        setAlertContentKey?.("signin_successful");
+        setType?.("success");
+        setShowToaster?.(true);
+
+        setTimeout(() => {
+          setPageSwitcher(EnumAuthPages.login);
+          setShowToaster?.(false);
+        }, 2000);
+      }
+    } catch (error: any) {
+      const newErrorList = [...errors, error.message];
+      const filtered = newErrorList.filter((elem, index) => {
+        return newErrorList.indexOf(elem) === index;
+      });
+      setErrors(filtered);
+    }
+  };
+
+  const handleSignIn = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const ref = signinFormRef.current;
-    if (ref) {
+    if (signinFormRef.current) {
       const { name, email, password } = Object.fromEntries(
-        new FormData(ref).entries()
+        new FormData(signinFormRef.current).entries()
       ) as Partial<IFormSigninUser>;
 
-      if (name && email && password) {
-        const isValid =
-          name.length > 0 &&
-          validateCharacters(password) &&
-          validateNumbers(password) &&
-          validateEmail(email);
+      if (name && formStepNavigator === EnumFormStepsNavigator.name)
+        handleNavigate.Add();
+      if (
+        email &&
+        formStepNavigator === EnumFormStepsNavigator.email &&
+        validateEmail(email)
+      )
+        handleNavigate.Add();
 
-        if (isValid) {
-          try {
-            const { errors } = await createUserMutation({
-              variables: { name, email, password },
-            });
-            if (!errors) {
-              setErrors([]);
-              setPageSwitcher(EnumAuthPages.login);
-            }
-          } catch (error: any) {
-            const newErrorList = [...errors, error.message];
-            const filtered = newErrorList.filter((elem, index) => {
-              return newErrorList.indexOf(elem) === index;
-            });
-            setErrors(filtered);
-          }
-        }
+      if (!name || !email || !password) return;
+
+      if (
+        name.length > 0 &&
+        validateEmail(email) &&
+        validateCharacters(password) &&
+        validateNumbers(password)
+      ) {
+        sendUser(name, email, password);
       }
     }
   };
@@ -127,17 +160,7 @@ const Authentication: React.FC = () => {
     }
   };
 
-  // const handleNavigate = {
-  //   Reset: () => {
-  //     setFormStepNavigator(EnumFormStepsNavigator.name);
-  //   },
-  //   Add: () => {
-  //     setFormStepNavigator((oldValue) => oldValue + 1);
-  //   },
-  // };
-
   const getCurrentPage = () => {
-    // setFormStepNavigator(EnumFormStepsNavigator.name);
     switch (pageSwitcher) {
       case EnumAuthPages.auth:
         return <Auth setPageSwitcher={setPageSwitcher} />;
@@ -146,6 +169,7 @@ const Authentication: React.FC = () => {
         return (
           <form onSubmit={handleLogin} ref={loginFormRef}>
             <Login
+              handleNavigate={handleNavigate}
               formStepNavigator={formStepNavigator}
               isLoading={loginLoading}
               errors={errors}
@@ -157,9 +181,9 @@ const Authentication: React.FC = () => {
 
       case EnumAuthPages.signin:
         return (
-          <form onSubmit={createUser} ref={signinFormRef}>
+          <form onSubmit={handleSignIn} ref={signinFormRef}>
             <Signin
-              // handleNavigate={handleNavigate}
+              handleNavigate={handleNavigate}
               formStepNavigator={formStepNavigator}
               isLoading={signinLoading}
               errors={errors}
@@ -181,6 +205,10 @@ const Authentication: React.FC = () => {
       setContentKeys?.(contentKeysData.contentKeys);
     }
   }, [contentKeysData]);
+
+  useEffect(() => {
+    setFormStepNavigator(EnumFormStepsNavigator.name);
+  }, [pageSwitcher]);
 
   return (
     <div className='container flex flex-wrap items-center justify-center mx-auto'>

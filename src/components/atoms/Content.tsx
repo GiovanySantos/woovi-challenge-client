@@ -12,11 +12,8 @@ const Content: React.FC<IProps> = (props) => {
 
   const getContent = (contentKey: string) => {
     if (contentKeys && contentKeys.length > 0) {
-      return String(
-        contentKeys.find((ck) => ck.key === String(contentKey))?.content
-      );
+      return contentKeys.find((ck) => ck.key === String(contentKey))?.content;
     }
-    return "";
   };
 
   return (

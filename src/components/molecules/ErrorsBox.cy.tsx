@@ -1,10 +1,10 @@
 import React from "react";
-import Toaster from "./Toaster";
+import ErrorsBox from "./ErrorsBox";
 
 describe("Should test Toaster functionality", () => {
   it("Should test basic properties", () => {
     cy.mount(
-      <Toaster
+      <ErrorsBox
         dataTestId='dismiss-button'
         errorsContentKey={["test_toaster"]}
       />

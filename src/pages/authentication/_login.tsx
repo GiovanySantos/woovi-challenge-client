@@ -1,10 +1,11 @@
 import ButtonGeneric from "@/components/atoms/ButtonGeneric";
 import Content from "@/components/atoms/Content";
 import InputGeneric from "@/components/molecules/InputGeneric";
-import Toaster from "@/components/molecules/Toaster";
+import ErrorsBox from "@/components/molecules/ErrorsBox";
 import { EnumAuthPages } from "@/types/enums";
-import React from "react";
+import React, { useContext } from "react";
 import { EnumFormStepsNavigator } from ".";
+import { AlertContext } from "@/contexts/AlertContext";
 
 interface IProps {
   isLoading?: boolean;
@@ -12,6 +13,11 @@ interface IProps {
   setPageSwitcher: React.Dispatch<React.SetStateAction<EnumAuthPages>>;
   setErrors: React.Dispatch<React.SetStateAction<string[]>>;
   formStepNavigator: EnumFormStepsNavigator;
+  handleNavigate?: {
+    Reset: () => void;
+    Add: () => void;
+    AddTwo: () => void;
+  };
 }
 
 const Login: React.FC<IProps> = (props) => {
@@ -21,6 +27,7 @@ const Login: React.FC<IProps> = (props) => {
     setErrors,
     setPageSwitcher,
     formStepNavigator,
+    handleNavigate,
   } = props;
 
   return (
@@ -46,7 +53,7 @@ const Login: React.FC<IProps> = (props) => {
         <Content contentKey='recover_password' />
       </div>
       {errors.length > 0 && (
-        <Toaster
+        <ErrorsBox
           dataTestId='dismiss-button'
           setErrors={setErrors}
           errorsContentKey={errors}
@@ -54,9 +61,10 @@ const Login: React.FC<IProps> = (props) => {
       )}
       <ButtonGeneric
         isLoading={isLoading}
-        type={formStepNavigator < 2 ? "button" : "submit"}
+        type='submit'
         dataTestId='continue-button'
-        className='w-full'>
+        className='w-full'
+        onClick={handleNavigate?.AddTwo}>
         <Content
           contentKey={
             formStepNavigator < 2 ? "continue_button" : "login_button"

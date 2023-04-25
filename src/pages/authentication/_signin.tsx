@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import Content from "@/components/atoms/Content";
 import ButtonGeneric from "@/components/atoms/ButtonGeneric";
 import InputGeneric from "@/components/molecules/InputGeneric";
@@ -7,9 +7,10 @@ import {
   validateEmail,
   validateNumbers,
 } from "@/utils/validations";
-import Toaster from "@/components/molecules/Toaster";
+import ErrorsBox from "@/components/molecules/ErrorsBox";
 import { EnumAuthPages } from "@/types/enums";
 import { EnumFormStepsNavigator } from ".";
+import { AlertContext } from "@/contexts/AlertContext";
 
 interface IProps {
   isLoading?: boolean;
@@ -17,10 +18,10 @@ interface IProps {
   setPageSwitcher: React.Dispatch<React.SetStateAction<EnumAuthPages>>;
   setErrors: React.Dispatch<React.SetStateAction<string[]>>;
   formStepNavigator: EnumFormStepsNavigator;
-  // handleNavigate?: {
-  //   Reset: () => void;
-  //   Add: () => void;
-  // };
+  handleNavigate?: {
+    Reset: () => void;
+    Add: () => void;
+  };
 }
 
 const Signin: React.FC<IProps> = (props) => {
@@ -30,10 +31,12 @@ const Signin: React.FC<IProps> = (props) => {
     setErrors,
     isLoading,
     formStepNavigator,
-    // handleNavigate,
   } = props;
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+
+  const { setShowToaster, setAlertContentKey, setType } =
+    useContext(AlertContext);
 
   const getValidationSVGIcon = (statement: boolean) => {
     return statement ? (
@@ -103,7 +106,7 @@ const Signin: React.FC<IProps> = (props) => {
       </div>
       <div className='flex flex-col gap-5'>
         {errors.length > 0 && (
-          <Toaster
+          <ErrorsBox
             dataTestId='dismiss-button'
             setErrors={setErrors}
             errorsContentKey={errors}
@@ -113,9 +116,7 @@ const Signin: React.FC<IProps> = (props) => {
           isLoading={isLoading}
           type='submit'
           dataTestId='continue-button'
-          className='w-full'
-          // onClick={handleNavigate?.Add}
-        >
+          className='w-full'>
           <Content
             contentKey={
               formStepNavigator < 2 ? "continue_button" : "signin_button"
