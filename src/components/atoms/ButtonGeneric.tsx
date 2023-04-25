@@ -1,5 +1,4 @@
 import React from "react";
-import { SpinnerSVG } from "@/assets/SpinnerSVG";
 
 interface IProps {
   children: JSX.Element;

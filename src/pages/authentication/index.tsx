@@ -21,11 +21,19 @@ interface IFormSigninUser {
   password: string;
 }
 
+export enum EnumFormStepsNavigator {
+  name = 0,
+  email = 1,
+  password = 2,
+}
+
 const Authentication: React.FC = () => {
   const [pageSwitcher, setPageSwitcher] = useState<EnumAuthPages>(
     EnumAuthPages.auth
   );
   const [errors, setErrors] = useState<string[]>([]);
+  const [formStepNavigator, setFormStepNavigator] =
+    useState<EnumFormStepsNavigator>(EnumFormStepsNavigator.password);
 
   const loginFormRef = useRef<HTMLFormElement>(null);
   const signinFormRef = useRef<HTMLFormElement>(null);
@@ -119,7 +127,17 @@ const Authentication: React.FC = () => {
     }
   };
 
+  // const handleNavigate = {
+  //   Reset: () => {
+  //     setFormStepNavigator(EnumFormStepsNavigator.name);
+  //   },
+  //   Add: () => {
+  //     setFormStepNavigator((oldValue) => oldValue + 1);
+  //   },
+  // };
+
   const getCurrentPage = () => {
+    // setFormStepNavigator(EnumFormStepsNavigator.name);
     switch (pageSwitcher) {
       case EnumAuthPages.auth:
         return <Auth setPageSwitcher={setPageSwitcher} />;
@@ -128,6 +146,7 @@ const Authentication: React.FC = () => {
         return (
           <form onSubmit={handleLogin} ref={loginFormRef}>
             <Login
+              formStepNavigator={formStepNavigator}
               isLoading={loginLoading}
               errors={errors}
               setErrors={setErrors}
@@ -140,6 +159,8 @@ const Authentication: React.FC = () => {
         return (
           <form onSubmit={createUser} ref={signinFormRef}>
             <Signin
+              // handleNavigate={handleNavigate}
+              formStepNavigator={formStepNavigator}
               isLoading={signinLoading}
               errors={errors}
               setErrors={setErrors}

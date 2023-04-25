@@ -9,16 +9,29 @@ import {
 } from "@/utils/validations";
 import Toaster from "@/components/molecules/Toaster";
 import { EnumAuthPages } from "@/types/enums";
+import { EnumFormStepsNavigator } from ".";
 
 interface IProps {
   isLoading?: boolean;
   errors?: string[];
   setPageSwitcher: React.Dispatch<React.SetStateAction<EnumAuthPages>>;
   setErrors: React.Dispatch<React.SetStateAction<string[]>>;
+  formStepNavigator: EnumFormStepsNavigator;
+  // handleNavigate?: {
+  //   Reset: () => void;
+  //   Add: () => void;
+  // };
 }
 
 const Signin: React.FC<IProps> = (props) => {
-  const { setPageSwitcher, errors = [], setErrors, isLoading } = props;
+  const {
+    setPageSwitcher,
+    errors = [],
+    setErrors,
+    isLoading,
+    formStepNavigator,
+    // handleNavigate,
+  } = props;
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
@@ -61,6 +74,7 @@ const Signin: React.FC<IProps> = (props) => {
           type='text'
         />
         <InputGeneric
+          hidden={formStepNavigator < 1}
           name='email'
           dataTestId='signin_email_label'
           label='signin_email_label'
@@ -69,6 +83,7 @@ const Signin: React.FC<IProps> = (props) => {
           onChange={(e) => setEmail(e.target.value)}
         />
         <InputGeneric
+          hidden={formStepNavigator < 2}
           name='password'
           dataTestId='signin_password_label'
           label='signin_password_label'
@@ -98,8 +113,14 @@ const Signin: React.FC<IProps> = (props) => {
           isLoading={isLoading}
           type='submit'
           dataTestId='continue-button'
-          className='w-full'>
-          <Content contentKey='continue_button' />
+          className='w-full'
+          // onClick={handleNavigate?.Add}
+        >
+          <Content
+            contentKey={
+              formStepNavigator < 2 ? "continue_button" : "signin_button"
+            }
+          />
         </ButtonGeneric>
         <div className='flex flex-col gap-3 border-[1px] border-gray rounded-md px-3 py-4 font-semibold text-zinc-600'>
           <Content contentKey='validations_title' />

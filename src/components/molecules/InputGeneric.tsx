@@ -8,15 +8,25 @@ interface IProps {
   dataTestId: string;
   name: string;
   value?: string;
+  hidden?: boolean;
   onChange?: ChangeEventHandler<HTMLInputElement> | undefined;
   ref?: React.MutableRefObject<HTMLInputElement | null>;
 }
 
 const InputGeneric: React.FC<IProps> = (props) => {
-  const { label, type, dataTestId, className, name, value, onChange, ref } =
-    props;
+  const {
+    label,
+    type,
+    dataTestId,
+    hidden,
+    className,
+    name,
+    value,
+    onChange,
+    ref,
+  } = props;
   return (
-    <div className='relative selection:bg-green cursor-text'>
+    <div hidden={hidden} className='relative selection:bg-green cursor-text'>
       <input
         ref={ref}
         value={value}
