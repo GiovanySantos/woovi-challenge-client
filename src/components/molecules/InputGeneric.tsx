@@ -1,40 +1,42 @@
-import React, { ChangeEventHandler } from "react";
+import React, { ChangeEventHandler, RefObject } from "react";
 import Content from "../atoms/Content";
 
 interface IProps {
-  label: string;
+  refference: React.RefObject<HTMLInputElement>;
   type: string;
+  name: string;
+  label: string;
   className?: string;
   dataTestId: string;
-  name: string;
-  value?: string;
   hidden?: boolean;
+  errorMessage: [];
+  value: string;
   onChange?: ChangeEventHandler<HTMLInputElement> | undefined;
-  ref?: React.MutableRefObject<HTMLInputElement | null>;
 }
 
 const InputGeneric: React.FC<IProps> = (props) => {
   const {
-    label,
-    type,
-    dataTestId,
-    hidden,
-    className,
+    refference,
     name,
+    type,
+    label,
+    className,
+    dataTestId,
     value,
     onChange,
-    ref,
+    hidden,
   } = props;
+
   return (
     <div hidden={hidden} className='relative selection:bg-green cursor-text'>
       <input
-        ref={ref}
-        value={value}
-        onChange={onChange && onChange}
+        ref={refference}
+        type={type}
         name={name}
+        value={value}
+        onChange={onChange}
         id={dataTestId}
         data-testid={dataTestId}
-        type={type}
         className={`${className} block px-2.5 pb-2.5 pt-4 w-full text-sm text-primary_text bg-transparent rounded-md border-[1px] border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer selection:bg-green`}
         placeholder=' '
       />

@@ -3,37 +3,23 @@ import Content from "@/components/atoms/Content";
 import InputGeneric from "@/components/molecules/InputGeneric";
 import ErrorsBox from "@/components/molecules/ErrorsBox";
 import { EnumAuthPages } from "@/types/enums";
-import React, { useContext } from "react";
+import React from "react";
 import { EnumFormStepsNavigator } from ".";
-import { AlertContext } from "@/contexts/AlertContext";
 
 interface IProps {
   isLoading?: boolean;
   errors?: string[];
-  setPageSwitcher: React.Dispatch<React.SetStateAction<EnumAuthPages>>;
   setErrors: React.Dispatch<React.SetStateAction<string[]>>;
-  formStepNavigator: EnumFormStepsNavigator;
-  handleNavigate?: {
-    Reset: () => void;
-    Add: () => void;
-    AddTwo: () => void;
-  };
+  setPageSwitcher: React.Dispatch<React.SetStateAction<EnumAuthPages>>;
 }
 
 const Login: React.FC<IProps> = (props) => {
-  const {
-    isLoading,
-    errors = [],
-    setErrors,
-    setPageSwitcher,
-    formStepNavigator,
-    handleNavigate,
-  } = props;
+  const { isLoading, errors = [], setErrors, setPageSwitcher } = props;
 
   return (
     <div className='flex flex-col justify-start gap-5 text-start'>
       <Content className='text-3xl font-semibold' contentKey='welcome_title' />
-      <InputGeneric
+      {/* <InputGeneric
         name='email'
         dataTestId='login_email_label'
         label='login_email_label'
@@ -46,9 +32,9 @@ const Login: React.FC<IProps> = (props) => {
         label='login_password_label'
         type='password'
         className='text-2xl font-bold'
-      />
+      /> */}
       <div
-        hidden={formStepNavigator < 2}
+        // hidden={formStepNavigator < 2}
         className='cursor-pointer text-soft_blue w-fit hover:text-blue'>
         <Content contentKey='recover_password' />
       </div>
@@ -63,12 +49,12 @@ const Login: React.FC<IProps> = (props) => {
         isLoading={isLoading}
         type='submit'
         dataTestId='continue-button'
-        className='w-full'
-        onClick={handleNavigate?.AddTwo}>
+        className='w-full'>
         <Content
-          contentKey={
-            formStepNavigator < 2 ? "continue_button" : "login_button"
-          }
+          // contentKey={
+          //   formStepNavigator < 2 ? "continue_button" : "login_button"
+          // }
+          contentKey='continue_button'
         />
       </ButtonGeneric>
       <div className='flex gap-2'>
