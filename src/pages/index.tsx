@@ -11,6 +11,8 @@ export default function Home() {
     if (!userData) router.push("/authentication");
   }, [userData]);
 
+  console.log(userData);
+
   return (
     <div className=''>
       <div className=''>Welcome {userData?.name}</div>

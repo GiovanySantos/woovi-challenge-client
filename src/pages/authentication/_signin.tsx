@@ -103,7 +103,6 @@ const Signin: React.FC<IProps> = (props) => {
           name='name'
           type='text'
           value={signinData.name}
-          errorMessage={[]}
           dataTestId='signin_name_label'
           label='signin_name_label'
           onChange={onChange}
@@ -113,7 +112,6 @@ const Signin: React.FC<IProps> = (props) => {
           name='email'
           type='email'
           value={signinData.email}
-          errorMessage={[]}
           hidden={hiddenFields < 1}
           dataTestId='signin_email_label'
           label='signin_email_label'
@@ -124,7 +122,6 @@ const Signin: React.FC<IProps> = (props) => {
           type='password'
           name='password'
           value={signinData.password}
-          errorMessage={[]}
           hidden={hiddenFields < 2}
           dataTestId='signin_password_label'
           label='signin_password_label'

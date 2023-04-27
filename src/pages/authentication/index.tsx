@@ -9,6 +9,7 @@ import Auth from "./_auth";
 import Login from "./_login";
 import Signin from "./_signin";
 import { AlertContext } from "@/contexts/AlertContext";
+import { UserContext } from "@/contexts/UserContext";
 
 const Authentication: React.FC = () => {
   const [pageSwitcher, setPageSwitcher] = useState<EnumAuthPages>(
@@ -17,7 +18,7 @@ const Authentication: React.FC = () => {
   const [errors, setErrors] = useState<string[]>([]);
 
   const { setContentKeys } = useContext(ContentKeyContext);
-  // const { setUserData } = useContext(UserContext);
+  const { setUserData } = useContext(UserContext);
   const { setAlertContentKey, setShowToaster, setType } =
     useContext(AlertContext);
 
@@ -37,6 +38,24 @@ const Authentication: React.FC = () => {
 
   const [createUserMutation, { loading: signinLoading }] =
     useMutation(CREATE_USER_MUTATION);
+
+  const handleLogin = async (email: string, password: string) => {
+    try {
+      const { data } = await authenticateMutation({
+        variables: { email, password },
+      });
+      if (data) {
+        setUserData?.(data);
+        router.push("/");
+      }
+    } catch (error: any) {
+      const newErrorList = [...errors, error.message];
+      const filtered = newErrorList.filter((elem, index) => {
+        return newErrorList.indexOf(elem) === index;
+      });
+      setErrors(filtered);
+    }
+  };
 
   const handleCreateUser = async (
     name: string,
@@ -75,6 +94,7 @@ const Authentication: React.FC = () => {
       case EnumAuthPages.login:
         return (
           <Login
+            handleLogin={handleLogin}
             isLoading={loginLoading}
             errors={errors}
             setErrors={setErrors}

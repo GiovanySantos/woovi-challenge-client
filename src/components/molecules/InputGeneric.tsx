@@ -9,7 +9,6 @@ interface IProps {
   className?: string;
   dataTestId: string;
   hidden?: boolean;
-  errorMessage: [];
   value: string;
   onChange?: ChangeEventHandler<HTMLInputElement> | undefined;
 }
