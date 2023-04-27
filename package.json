@@ -7,13 +7,17 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "cypress": "cypress open"
+    "cypress": "cypress open",
+    "cy:run": "cypress run",
+    "cy:parallel": "cypress-parallel -s cy:run -t 2 -d ./cypress/e2e/"
   },
   "dependencies": {
     "@apollo/client": "^3.7.12",
     "autoprefixer": "10.4.14",
+    "cypress-parallel": "^0.12.0",
     "eslint": "8.38.0",
     "eslint-config-next": "13.3.0",
+    "global": "^4.4.0",
     "graphql": "^16.6.0",
     "next": "13.3.0",
     "postcss": "8.4.22",
@@ -26,7 +30,8 @@
     "@types/node": "18.15.11",
     "@types/react": "18.0.37",
     "@types/react-dom": "18.0.11",
-    "cypress": "^12.10.0",
+    "cypress": "^12.11.0",
     "typescript": "5.0.4"
   }
 }
+
