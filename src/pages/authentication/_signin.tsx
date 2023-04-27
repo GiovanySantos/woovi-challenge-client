@@ -19,8 +19,13 @@ interface IProps {
 }
 
 const Signin: React.FC<IProps> = (props) => {
-  const { errors, setErrors, setPageSwitcher, isLoading, handleCreateUser } =
-    props;
+  const {
+    errors = [],
+    setErrors,
+    setPageSwitcher,
+    isLoading,
+    handleCreateUser,
+  } = props;
 
   const [hiddenFields, setHiddenFields] = useState<number>(0);
   const [signinData, setSigninData] = useState({
@@ -38,9 +43,10 @@ const Signin: React.FC<IProps> = (props) => {
 
     const { name, email, password } = signinData;
 
-    const isNameValid = name.length > 0;
-    const isEmailValid = email.length > 0 && validateEmail(email);
+    const isNameValid = name && name.length > 0;
+    const isEmailValid = email && email.length > 0 && validateEmail(email);
     const isPasswordValid =
+      password &&
       password.length > 0 &&
       validateNumbers(password) &&
       validateCharacters(password);
@@ -50,11 +56,11 @@ const Signin: React.FC<IProps> = (props) => {
       return;
     }
 
-    if (name.length > 0) {
+    if (name && name.length > 0) {
       await setHiddenFields(1);
       emailRef.current?.focus();
     }
-    if (email.length > 0) {
+    if (email && email.length > 0) {
       await setHiddenFields(2);
       passwordRef.current?.focus();
     }

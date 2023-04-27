@@ -11,7 +11,7 @@ interface IContentKeyContext {
 
 const INITIAL_TEST_VALUE = [
   {
-    key: "test_Content",
+    key: "test_content",
     content: "this is a test",
   },
   {

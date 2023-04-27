@@ -2,14 +2,14 @@ import React, { ChangeEventHandler, RefObject } from "react";
 import Content from "../atoms/Content";
 
 interface IProps {
-  refference: React.RefObject<HTMLInputElement>;
-  type: string;
-  name: string;
   label: string;
-  className?: string;
   dataTestId: string;
+  refference?: React.RefObject<HTMLInputElement>;
+  type?: string;
+  name?: string;
+  className?: string;
   hidden?: boolean;
-  value: string;
+  value?: string;
   onChange?: ChangeEventHandler<HTMLInputElement> | undefined;
 }
 
