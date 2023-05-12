@@ -7,9 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "cypress": "cypress open",
-    "cy:run": "cypress run",
-    "cy:parallel": "cypress-parallel -s cy:run -t 2 -d ./cypress/e2e/"
+    "test": "cypress open --config baseUrl=http://localhost:3000",
+    "cy:parallel:e2e": "npx cypress run --spec './cypress/e2e/*.cy.ts'",
+    "cy:parallel:unit": "npx cypress run --component"
   },
   "dependencies": {
     "@apollo/client": "^3.7.12",
